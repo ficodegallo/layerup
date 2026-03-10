@@ -1,0 +1,118 @@
+<mjml>
+  <mj-head>
+    <mj-title>{{subject}}</mj-title>
+    <mj-preview>{{vibeBody}}</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Arial, Helvetica, sans-serif" />
+      <mj-text padding="0" />
+      <mj-section padding="0" />
+    </mj-attributes>
+    <mj-style>
+      a { color: #1e3a5f; }
+      .safety-mode .vibe-section { display: none !important; }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f3f4f6" width="600px">
+
+    <!-- Header -->
+    <mj-section background-color="#1e3a5f" padding="20px 30px">
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="#ffffff" font-family="Georgia, serif" letter-spacing="1px">
+          🌤 LayerUp
+        </mj-text>
+        <mj-text font-size="12px" color="#a8c4e0" font-family="Arial, sans-serif" padding-top="0">
+          {{formattedDate}} &bull; {{city}}, {{state}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Safety Banner (shown only when safetyMode=true) -->
+    {{#if safetyMode}}
+    <mj-section background-color="#fee2e2" padding="20px 30px">
+      <mj-column>
+        <mj-text font-size="14px" font-weight="700" color="#7f1d1d" font-family="Arial, sans-serif">
+          ⚠️ WEATHER ALERT
+        </mj-text>
+        <mj-text font-size="14px" color="#7f1d1d" font-family="Arial, sans-serif" line-height="1.6" padding-top="4px">
+          {{safetyBanner}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    {{/if}}
+
+    <!-- Vibe block (hidden in safety mode) -->
+    {{#unless safetyMode}}
+    <mj-section background-color="#f0f7ff" padding="24px 30px 16px">
+      <mj-column>
+        <mj-text font-size="11px" font-weight="700" color="#1e3a5f" font-family="Arial, sans-serif" text-transform="uppercase" letter-spacing="2px" padding-bottom="6px">
+          Today's Vibe
+        </mj-text>
+        <mj-text font-size="22px" font-weight="700" color="#111827" font-family="Georgia, serif" padding-top="0" padding-bottom="6px">
+          {{vibeHeadline}}
+        </mj-text>
+        <mj-text font-size="15px" color="#374151" font-family="Arial, sans-serif" line-height="1.6" padding-top="0">
+          {{vibeBody}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    {{/unless}}
+
+    <!-- Temperature + Footwear side by side -->
+    <mj-section background-color="#ffffff" padding="20px 30px">
+      <mj-column width="50%">
+        <mj-text font-size="11px" font-weight="700" color="#1e3a5f" font-family="Arial, sans-serif" text-transform="uppercase" letter-spacing="2px" padding-bottom="4px">
+          🌡️ Temperature
+        </mj-text>
+        <mj-text font-size="14px" color="#374151" font-family="Arial, sans-serif" line-height="1.5" padding-top="0">
+          {{temperatureBody}}
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <mj-text font-size="11px" font-weight="700" color="#1e3a5f" font-family="Arial, sans-serif" text-transform="uppercase" letter-spacing="2px" padding-bottom="4px">
+          👟 Footwear
+        </mj-text>
+        <mj-text font-size="14px" color="#374151" font-family="Arial, sans-serif" line-height="1.5" padding-top="0">
+          {{footwearBody}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- What to Wear -->
+    <mj-section background-color="#f9fafb" padding="20px 30px" border-top="1px solid #e5e7eb">
+      <mj-column>
+        <mj-text font-size="11px" font-weight="700" color="#1e3a5f" font-family="Arial, sans-serif" text-transform="uppercase" letter-spacing="2px" padding-bottom="4px">
+          🧥 What to Wear
+        </mj-text>
+        <mj-text font-size="15px" font-weight="600" color="#111827" font-family="Arial, sans-serif" line-height="1.5" padding-top="0">
+          {{layeringBody}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Accessories -->
+    <mj-section background-color="#ffffff" padding="20px 30px" border-top="1px solid #e5e7eb">
+      <mj-column>
+        <mj-text font-size="11px" font-weight="700" color="#1e3a5f" font-family="Arial, sans-serif" text-transform="uppercase" letter-spacing="2px" padding-bottom="4px">
+          🎒 Accessories
+        </mj-text>
+        <mj-text font-size="14px" color="#374151" font-family="Arial, sans-serif" line-height="1.6" padding-top="0">
+          {{accessoriesBody}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+    <mj-section background-color="#1e3a5f" padding="20px 30px">
+      <mj-column>
+        <mj-text font-size="12px" color="#a8c4e0" font-family="Arial, sans-serif" align="center" line-height="1.8">
+          You're receiving this because you signed up at layerup.email.<br/>
+          {{city}}, {{state}} {{zip}} &bull; Delivered at {{deliveryHour}}:00 local time<br/><br/>
+          <a href="{{unsubscribeUrl}}" style="color:#a8c4e0;text-decoration:underline;">Unsubscribe</a>
+          &nbsp;&bull;&nbsp;
+          <a href="{{baseUrl}}/privacy" style="color:#a8c4e0;text-decoration:underline;">Privacy Policy</a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

@@ -1,0 +1,10 @@
+<mj-section background-color="#fee2e2" padding="20px 30px" border-left="4px solid #dc2626">
+  <mj-column>
+    <mj-text font-size="14px" font-weight="700" color="#7f1d1d" font-family="Arial, sans-serif">
+      ⚠️ WEATHER ALERT — {{safetyHeadline}}
+    </mj-text>
+    <mj-text font-size="14px" color="#7f1d1d" font-family="Arial, sans-serif" line-height="1.6" padding-top="4px">
+      {{safetyBody}}
+    </mj-text>
+  </mj-column>
+</mj-section>

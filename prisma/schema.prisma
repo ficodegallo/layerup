@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+}
+
+enum SendStatus {
+  QUEUED
+  SENT
+  FAILED
+  BOUNCED
+  OPENED
+  CLICKED
+}
+
+enum Tone {
+  MILD
+  DRY
+  DAD_JOKE
+  STRAIGHT
+}
+
+enum LifestyleMode {
+  DRIVE
+  WALK
+}
+
+enum Units {
+  F
+  C
+}
+
+model Subscriber {
+  id               String           @id @default(uuid()) @db.Uuid
+  email            String           @unique
+  zip              String           @db.VarChar(10)
+  name             String?
+  deliveryHour     Int              @default(7) @db.SmallInt @map("delivery_hour")
+  timezone         String
+  status           SubscriberStatus @default(PENDING)
+  confirmToken     String?          @unique @map("confirm_token")
+  unsubscribeToken String           @unique @map("unsubscribe_token")
+  magicToken       String?          @unique @map("magic_token")
+  magicTokenExp    DateTime?        @map("magic_token_exp") @db.Timestamptz
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  confirmedAt      DateTime?        @map("confirmed_at") @db.Timestamptz
+  unsubscribedAt   DateTime?        @map("unsubscribed_at") @db.Timestamptz
+
+  preferences Preferences?
+  sendLogs    SendLog[]
+
+  @@index([status, timezone, deliveryHour])
+  @@map("subscribers")
+}
+
+model Preferences {
+  id           String        @id @default(uuid()) @db.Uuid
+  subscriberId String        @unique @map("subscriber_id") @db.Uuid
+  tone         Tone          @default(MILD)
+  lifestyleMode LifestyleMode @default(WALK) @map("lifestyle_mode")
+  units        Units         @default(F)
+  activities   String[]
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  subscriber Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  @@map("preferences")
+}
+
+model ZipCode {
+  zip      String  @id @db.VarChar(10)
+  city     String
+  state    String  @db.Char(2)
+  lat      Decimal
+  lng      Decimal
+  timezone String
+
+  @@map("zip_codes")
+}
+
+model WeatherCache {
+  id            String   @id @default(uuid()) @db.Uuid
+  zip           String   @db.VarChar(10)
+  fetchedForDate DateTime @map("fetched_for_date") @db.Date
+  rawJson       Json     @map("raw_json")
+  nwsAlertsJson Json?    @map("nws_alerts_json")
+  fetchedAt     DateTime @default(now()) @map("fetched_at") @db.Timestamptz
+
+  @@unique([zip, fetchedForDate])
+  @@map("weather_cache")
+}
+
+model SendLog {
+  id            String     @id @default(uuid()) @db.Uuid
+  subscriberId  String     @map("subscriber_id") @db.Uuid
+  sentAt        DateTime   @default(now()) @map("sent_at") @db.Timestamptz
+  dateFor       DateTime   @map("date_for") @db.Date
+  zip           String     @db.VarChar(10)
+  sendgridMsgId String?    @map("sendgrid_msg_id")
+  status        SendStatus @default(QUEUED)
+  opens         Int        @default(0) @db.SmallInt
+  clicks        Int        @default(0) @db.SmallInt
+  errorMessage  String?    @map("error_message")
+
+  subscriber Subscriber @relation(fields: [subscriberId], references: [id])
+
+  @@index([subscriberId, dateFor])
+  @@map("send_logs")
+}
+
+model EmailEvent {
+  id            String   @id @default(uuid()) @db.Uuid
+  sendgridMsgId String   @map("sendgrid_msg_id")
+  eventType     String   @map("event_type")
+  occurredAt    DateTime @map("occurred_at") @db.Timestamptz
+  metadata      Json?
+
+  @@map("email_events")
+}
