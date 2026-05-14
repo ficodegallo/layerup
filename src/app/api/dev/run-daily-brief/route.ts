@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { persistDailyBriefForSubscriber } from "@/lib/briefing/persist-daily-brief";
+import { internalRouteUnavailable } from "@/lib/security/internal-only";
+import { jsonNoStore } from "@/lib/security/http";
 
 const runDailyBriefSchema = z.object({
   email: z.email().optional(),
@@ -9,8 +10,10 @@ const runDailyBriefSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV === "production") {
-    return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const unavailableResponse = internalRouteUnavailable();
+
+  if (unavailableResponse) {
+    return unavailableResponse;
   }
 
   let payload: unknown = {};
@@ -19,7 +22,7 @@ export async function POST(request: Request) {
     const rawBody = await request.text();
     payload = rawBody ? JSON.parse(rawBody) : {};
   } catch {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Please submit valid JSON." },
       { status: 400 },
     );
@@ -28,7 +31,7 @@ export async function POST(request: Request) {
   const parsed = runDailyBriefSchema.safeParse(payload);
 
   if (!parsed.success) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Pass a valid email or subscriber id if you want to target one." },
       { status: 400 },
     );
@@ -37,7 +40,7 @@ export async function POST(request: Request) {
   try {
     const result = await persistDailyBriefForSubscriber(parsed.data);
 
-    return NextResponse.json({
+    return jsonNoStore({
       ok: true,
       message: "Daily brief generated and saved.",
       jobRunId: result.jobRunId,
@@ -58,7 +61,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error:
           error instanceof Error

@@ -2,10 +2,17 @@ import { notFound } from "next/navigation";
 
 import { getPrismaClient } from "@/lib/db";
 import { renderDailyBriefEmail } from "@/lib/email/render-daily-brief-email";
+import { guardInternalPage } from "@/lib/security/internal-only";
 import type { DailyBrief } from "@/lib/briefing/types";
 import type { WeatherSnapshot } from "@/lib/weather/types";
 
 export const dynamic = "force-dynamic";
+export const metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 type EmailPreviewPageProps = {
   searchParams: Promise<{
@@ -17,6 +24,8 @@ type EmailPreviewPageProps = {
 export default async function EmailPreviewPage({
   searchParams,
 }: EmailPreviewPageProps) {
+  guardInternalPage();
+
   const params = await searchParams;
   const prisma = getPrismaClient();
 

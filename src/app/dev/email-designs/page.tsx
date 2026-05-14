@@ -9,10 +9,17 @@ import {
   type EmailDesignVariantMeta,
 } from "@/lib/email/email-design-library";
 import { renderDailyBriefEmail } from "@/lib/email/render-daily-brief-email";
+import { guardInternalPage } from "@/lib/security/internal-only";
 import { getLiveWeatherSnapshot } from "@/lib/weather/get-live-weather-snapshot";
 import type { WeatherSnapshot } from "@/lib/weather/types";
 
 export const dynamic = "force-dynamic";
+export const metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 type EmailDesignsPageProps = {
   searchParams: Promise<{
@@ -92,6 +99,8 @@ type RenderedDesign = {
 export default async function EmailDesignsPage({
   searchParams,
 }: EmailDesignsPageProps) {
+  guardInternalPage();
+
   const params = await searchParams;
   const preview = await getPreviewSource(params);
 

@@ -32,13 +32,14 @@ export function SignupForm({ theme, heroGradient }: SignupFormProps) {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const payload = {
-      email: String(formData.get("email") ?? ""),
-      zipCode: String(formData.get("zipCode") ?? ""),
-      firstName: String(formData.get("firstName") ?? ""),
-      preferredDeliveryHour: Number(formData.get("preferredDeliveryHour") ?? 7),
-      children: wantsChildRecommendations
-        ? formData.getAll("childAgeYears").map((value) => ({
+      const payload = {
+        email: String(formData.get("email") ?? ""),
+        zipCode: String(formData.get("zipCode") ?? ""),
+        firstName: String(formData.get("firstName") ?? ""),
+        preferredDeliveryHour: Number(formData.get("preferredDeliveryHour") ?? 7),
+        website: String(formData.get("website") ?? ""),
+        children: wantsChildRecommendations
+          ? formData.getAll("childAgeYears").map((value) => ({
             ageYears: Number(value),
           }))
         : [],
@@ -112,6 +113,21 @@ export function SignupForm({ theme, heroGradient }: SignupFormProps) {
         </div>
 
         <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
+          <div
+            aria-hidden="true"
+            className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"
+          >
+            <label>
+              Website
+              <input
+                autoComplete="off"
+                name="website"
+                tabIndex={-1}
+                type="text"
+              />
+            </label>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-[var(--foreground)]">

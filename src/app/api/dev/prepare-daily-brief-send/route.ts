@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { prepareDailyBriefSend } from "@/lib/email/prepare-daily-brief-send";
+import { internalRouteUnavailable } from "@/lib/security/internal-only";
+import { jsonNoStore } from "@/lib/security/http";
 
 const prepareDailyBriefSendSchema = z.object({
   email: z.email().optional(),
@@ -9,8 +10,10 @@ const prepareDailyBriefSendSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV === "production") {
-    return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const unavailableResponse = internalRouteUnavailable();
+
+  if (unavailableResponse) {
+    return unavailableResponse;
   }
 
   let payload: unknown = {};
@@ -19,7 +22,7 @@ export async function POST(request: Request) {
     const rawBody = await request.text();
     payload = rawBody ? JSON.parse(rawBody) : {};
   } catch {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Please submit valid JSON." },
       { status: 400 },
     );
@@ -28,7 +31,7 @@ export async function POST(request: Request) {
   const parsed = prepareDailyBriefSendSchema.safeParse(payload);
 
   if (!parsed.success) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Pass a valid email or dailyBriefingId if you want to target one." },
       { status: 400 },
     );
@@ -37,7 +40,7 @@ export async function POST(request: Request) {
   try {
     const preparedSend = await prepareDailyBriefSend(parsed.data);
 
-    return NextResponse.json({
+    return jsonNoStore({
       ok: true,
       sendReady: preparedSend.sendReady,
       dailyBriefingId: preparedSend.dailyBriefingId,
@@ -48,7 +51,7 @@ export async function POST(request: Request) {
       html: preparedSend.html,
     });
   } catch (error) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error:
           error instanceof Error

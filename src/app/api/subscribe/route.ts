@@ -1,12 +1,19 @@
-import { NextResponse } from "next/server";
-
-import {
-  DeliveryHour,
-  SubscriberStatus,
-} from "@prisma/client";
-import { getPrismaClient } from "@/lib/db";
+import { DeliveryHour } from "@prisma/client";
 import { resolveZipCode } from "@/lib/location/resolve-zip-code";
+import { sendSignupVerificationEmail } from "@/lib/email/send-signup-verification";
+import { createOrRefreshPendingSignup } from "@/lib/subscribers/pending-signup";
+import {
+  getClientIp,
+  getRequestOrigin,
+  isSameOriginRequest,
+  jsonNoStore,
+} from "@/lib/security/http";
+import { checkFixedWindowRateLimit } from "@/lib/security/rate-limit";
 import { betaSignupSchema } from "@/lib/validation/subscriber";
+
+const maxSignupBodyBytes = 8_192;
+const genericSuccessMessage =
+  "Check your email for a secure confirmation link to finish joining the beta.";
 
 function mapDeliveryHour(hour: 6 | 7 | 8) {
   if (hour === 6) {
@@ -21,12 +28,49 @@ function mapDeliveryHour(hour: 6 | 7 | 8) {
 }
 
 export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return jsonNoStore(
+      { error: "This request origin is not allowed." },
+      { status: 403 },
+    );
+  }
+
+  const contentType = request.headers.get("content-type") ?? "";
+
+  if (!contentType.includes("application/json")) {
+    return jsonNoStore(
+      { error: "Please submit JSON." },
+      { status: 415 },
+    );
+  }
+
+  const declaredContentLength = Number(request.headers.get("content-length") ?? "0");
+
+  if (
+    Number.isFinite(declaredContentLength) &&
+    declaredContentLength > maxSignupBodyBytes
+  ) {
+    return jsonNoStore(
+      { error: "That submission is too large." },
+      { status: 413 },
+    );
+  }
+
   let payload: unknown;
 
   try {
-    payload = await request.json();
+    const rawBody = await request.text();
+
+    if (Buffer.byteLength(rawBody, "utf8") > maxSignupBodyBytes) {
+      return jsonNoStore(
+        { error: "That submission is too large." },
+        { status: 413 },
+      );
+    }
+
+    payload = rawBody ? JSON.parse(rawBody) : {};
   } catch {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Please submit valid JSON." },
       { status: 400 },
     );
@@ -35,31 +79,64 @@ export async function POST(request: Request) {
   const parsed = betaSignupSchema.safeParse(payload);
 
   if (!parsed.success) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error:
           "Please double-check your email, ZIP code, and any child ages you entered.",
-        issues: parsed.error.flatten(),
       },
       { status: 400 },
     );
   }
 
+  if (parsed.data.website.trim().length > 0) {
+    return jsonNoStore({
+      ok: true,
+      message: genericSuccessMessage,
+    });
+  }
+
   const normalizedEmail = parsed.data.email.trim().toLowerCase();
-  const firstName = parsed.data.firstName?.trim() || null;
-  const ageRecordedAt = new Date();
-  const childProfiles = parsed.data.children.map((child, index) => ({
-    sortOrder: index,
-    reportedAgeYears: child.ageYears,
-    ageRecordedAt,
-  }));
+  const clientIp = getClientIp(request);
+  const ipRateLimit = checkFixedWindowRateLimit(
+    `signup:ip:${clientIp}`,
+    10,
+    1000 * 60 * 15,
+  );
+
+  if (!ipRateLimit.allowed) {
+    return jsonNoStore(
+      {
+        error:
+          "Too many signup attempts from this connection. Please wait a few minutes and try again.",
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(ipRateLimit.retryAfterSeconds),
+        },
+      },
+    );
+  }
+
+  const emailRateLimit = checkFixedWindowRateLimit(
+    `signup:email:${normalizedEmail}`,
+    3,
+    1000 * 60 * 30,
+  );
+
+  if (!emailRateLimit.allowed) {
+    return jsonNoStore({
+      ok: true,
+      message: genericSuccessMessage,
+    });
+  }
 
   let location;
 
   try {
     location = await resolveZipCode(parsed.data.zipCode);
   } catch {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error:
           "We couldn't resolve that ZIP code yet. Please try another US ZIP code.",
@@ -69,82 +146,42 @@ export async function POST(request: Request) {
   }
 
   try {
-    const prisma = getPrismaClient();
-    const subscriber = await prisma.subscriber.upsert({
-      where: {
-        email: normalizedEmail,
-      },
-      create: {
-        email: normalizedEmail,
-        firstName,
-        zipCode: location.zipCode,
-        timeZone: location.timeZone,
-        latitude: location.latitude,
-        longitude: location.longitude,
-        status: SubscriberStatus.ACTIVE,
-        deliveryHour: mapDeliveryHour(parsed.data.preferredDeliveryHour),
-        ...(childProfiles.length > 0
-          ? {
-              children: {
-                create: childProfiles,
-              },
-            }
-          : {}),
-      },
-      update: {
-        firstName,
-        zipCode: location.zipCode,
-        timeZone: location.timeZone,
-        latitude: location.latitude,
-        longitude: location.longitude,
-        status: SubscriberStatus.ACTIVE,
-        deliveryHour: mapDeliveryHour(parsed.data.preferredDeliveryHour),
-        children: {
-          deleteMany: {},
-          ...(childProfiles.length > 0
-            ? {
-                create: childProfiles,
-              }
-            : {}),
-        },
-      },
-      select: {
-        id: true,
-        email: true,
-        _count: {
-          select: {
-            children: true,
-          },
-        },
-      },
+    const pendingSignupResult = await createOrRefreshPendingSignup({
+      email: normalizedEmail,
+      firstName: parsed.data.firstName?.trim() || null,
+      zipCode: location.zipCode,
+      timeZone: location.timeZone,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      deliveryHour: mapDeliveryHour(parsed.data.preferredDeliveryHour),
+      children: parsed.data.children,
     });
 
-    return NextResponse.json({
+    if (pendingSignupResult.kind === "verification-created") {
+      const confirmationUrl = new URL(
+        "/confirm-subscription",
+        getRequestOrigin(request),
+      );
+      confirmationUrl.searchParams.set("token", pendingSignupResult.token);
+
+      await sendSignupVerificationEmail({
+        to: normalizedEmail,
+        firstName: parsed.data.firstName,
+        confirmationUrl: confirmationUrl.toString(),
+      });
+    }
+
+    return jsonNoStore({
       ok: true,
-      mode: "beta-persisted",
-      message:
-        childProfiles.length > 0
-          ? `You're on the beta list for ${location.displayName}, with child recommendations turned on.`
-          : `You're on the beta list for ${location.displayName}.`,
-      subscriber: {
-        id: subscriber.id,
-        email: subscriber.email,
-        zipCode: location.zipCode,
-        timeZone: location.timeZone,
-        childCount: subscriber._count.children,
-      },
+      message: genericSuccessMessage,
     });
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown signup persistence error.";
-
-    return NextResponse.json(
+  } catch {
+    return jsonNoStore(
       {
-        error: message.includes("DATABASE_URL")
-          ? "Signup storage is not configured on this machine yet. Add DATABASE_URL to enable persistence."
-          : "We couldn't save your signup right now. Please try again in a minute.",
+        error:
+          "We couldn't start your secure signup right now. Please try again in a minute.",
       },
-      { status: message.includes("DATABASE_URL") ? 503 : 500 },
+      { status: 500 },
     );
   }
 }
