@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer Up — Email Designs Version 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --page-bg: #f2ead9;
+    --card-bg: rgba(255, 252, 244, 0.92);
+    --border: rgba(29, 36, 48, 0.10);
+    --text-primary: #1d2430;
+    --text-secondary: #5f7088;
+    --accent: #a14d3f;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Manrope', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--page-bg);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── Sticky Nav ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(242, 234, 217, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(29, 36, 48, 0.10);
+    padding: 0 24px;
+  }
+  .sticky-nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 52px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sticky-nav-inner::-webkit-scrollbar { display: none; }
+  .nav-version {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a14d3f;
+    white-space: nowrap;
+    padding-right: 20px;
+    border-right: 1px solid rgba(29,36,48,0.14);
+    margin-right: 20px;
+    flex-shrink: 0;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    height: 100%;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    border-right: 1px solid rgba(29,36,48,0.08);
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .nav-link:hover { color: var(--text-primary); }
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Page Header ── */
+  .page-header {
+    padding: 52px 40px 40px;
+    max-width: 900px;
+  }
+  .version-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: #a14d3f;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .page-header h1 {
+    font-family: var(--font-display);
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1.18;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+  }
+  .page-header p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 680px;
+  }
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+  }
+  .scroll-hint-arrow {
+    font-size: 18px;
+    animation: nudge 1.6s ease-in-out infinite;
+  }
+  @keyframes nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
+  }
+
+  /* ── Side-by-side scroll container ── */
+  .designs-scroll-wrap {
+    overflow-x: auto;
+    padding: 0 40px 60px;
+  }
+  .designs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 640px);
+    gap: 28px;
+    min-width: fit-content;
+  }
+
+  /* ── Per-design column ── */
+  .design-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .design-col-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .design-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a14d3f;
+  }
+  .design-name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-top: 4px;
+    color: var(--text-primary);
+  }
+  .design-summary {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+  .creativity-badge {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(29,36,48,0.12);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  /* Email container */
+  .email-frame {
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(29,36,48,0.10);
+    box-shadow: 0 20px 60px rgba(29,36,48,0.09), 0 4px 12px rgba(29,36,48,0.06);
+  }
+
+  /* Analysis cards */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .analysis-card {
+    background: rgba(255,253,248,0.85);
+    border: 1px solid rgba(29,36,48,0.09);
+    border-radius: 18px;
+    padding: 16px 18px;
+  }
+  .analysis-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .analysis-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .analysis-label.pros { color: #4a7c59; }
+  .analysis-label.cons { color: #a14d3f; }
+  .analysis-label.tradeoffs { color: #5f7088; }
+  .analysis-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .analysis-list li {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--text-primary);
+    padding-left: 14px;
+    position: relative;
+  }
+  .analysis-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+  }
+  .analysis-list.pros li::before { background: #4a7c59; opacity: 0.7; }
+  .analysis-list.cons li::before { background: #a14d3f; opacity: 0.7; }
+  .analysis-list.tradeoffs li::before { background: #5f7088; opacity: 0.7; }
+
+  /* ────────────────────────────────────────
+     EMAIL DESIGNS — inline HTML styles
+     All email-specific CSS is inlined.
+  ───────────────────────────────────────── */
+</style>
+</head>
+
+<body>
+
+<!-- Sticky Nav -->
+<nav class="sticky-nav">
+  <div class="sticky-nav-inner">
+    <span class="nav-version">Version 2</span>
+    <a href="#design-1" class="nav-link"><span class="nav-dot" style="background:#2A3050"></span>Night Dispatch</a>
+    <a href="#design-2" class="nav-link"><span class="nav-dot" style="background:#141414"></span>The Broadsheet</a>
+    <a href="#design-3" class="nav-link"><span class="nav-dot" style="background:#1B3A5E"></span>Thermal</a>
+    <a href="#design-4" class="nav-link"><span class="nav-dot" style="background:#C9614E"></span>Studio Clean</a>
+    <a href="#design-5" class="nav-link"><span class="nav-dot" style="background:#3D4A2E"></span>Forecast Report</a>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<header class="page-header">
+  <div class="version-badge">Version 2 — 5 New Directions</div>
+  <h1>Five more email designs,<br>pushing further out.</h1>
+  <p>Each design below starts from scratch — new color logic, new layout thinking, new voice. None of these share a system with the five designs in Version 1. Scroll horizontally to compare all five at full width, or jump to any design from the nav above.</p>
+  <div class="scroll-hint">
+    <span>Scroll to compare side by side</span>
+    <span class="scroll-hint-arrow">→</span>
+  </div>
+</header>
+
+<!-- Side-by-side Grid -->
+<div class="designs-scroll-wrap">
+<div class="designs-grid">
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DESIGN 1: NIGHT DISPATCH
+     Dark mode. Premium. Like reading the news before dawn.
+═══════════════════════════════════════════════════════════ -->
+<div class="design-col" id="design-1">
+  <div>
+    <div class="design-col-header">
+      <div>
+        <div class="design-num">Design 6 / New</div>
+        <div class="design-name">Night Dispatch</div>
+        <div class="design-summary">A fully dark-mode email system — the only design direction that goes there. Feels like premium late-night reading. Amber accents create warmth against the deep navy-charcoal background.</div>
+      </div>
+      <div class="creativity-badge">Creativity: High</div>
+    </div>
+  </div>
+
+  <div class="email-frame">
+    <!-- NIGHT DISPATCH EMAIL -->
+    <div style="background:#191E2C; max-width:640px; margin:0 auto; font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
+
+      <!-- Logo bar -->
+      <div style="padding:24px 24px 14px;">
+        <span style="font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#8B95B2;">Layer Up</span>
+      </div>
+
+      <!-- Hero -->
+      <div style="margin:0 20px 18px; background:#232A42; border:1px solid #2E3654; border-radius:28px; padding:28px 28px 24px;">
+        <p style="font-size:14px; line-height:22px; color:#8B95B2; margin-bottom:10px;">Good morning, Nick</p>
+        <h1 style="font-size:34px; line-height:40px; font-weight:700; color:#F0E8D5; margin-bottom:12px; letter-spacing:-0.5px;">Layers up, white sneakers down</h1>
+        <p style="font-size:15px; line-height:25px; color:#C5CEDF; margin-bottom:10px;">Winter is doing one last dramatic thing before it packs up and leaves. Respect it.</p>
+        <p style="font-size:12px; color:#5E6882; letter-spacing:0.04em;">Chicago, IL · 60618</p>
+      </div>
+
+      <!-- Vibe -->
+      <div style="margin:0 20px 18px; background:#1E2540; border:1px solid #2A3158; border-radius:28px; padding:24px 28px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#E8A850; margin-bottom:10px;">Vibe of the Day</p>
+        <p style="font-size:22px; line-height:32px; font-weight:600; color:#F0E8D5;">"Winter is doing one last dramatic thing before it packs up and leaves. Respect it."</p>
+      </div>
+
+      <!-- Temp + Footwear -->
+      <div style="display:flex; gap:16px; margin:0 20px 18px;">
+        <div style="flex:1; background:#232A42; border:1px solid #2E3654; border-radius:24px; padding:20px 22px;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.20em; color:#8B95B2; margin-bottom:10px;">Temperature</p>
+          <p style="font-size:15px; line-height:24px; color:#D8E0F0;">High 31°F, feels like <span style="color:#E8A850; font-weight:600;">22°F</span> with wind. That 9-degree gap is very much your problem today.</p>
+        </div>
+        <div style="flex:1; background:#232A42; border:1px solid #2E3654; border-radius:24px; padding:20px 22px;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.20em; color:#8B95B2; margin-bottom:10px;">Footwear</p>
+          <p style="font-size:15px; line-height:24px; color:#D8E0F0;">Waterproof. Snow arrives around 3pm and that slush situation on sidewalks will be unforgiving to suede.</p>
+        </div>
+      </div>
+
+      <!-- Layers -->
+      <div style="margin:0 20px 18px; background:#1E2540; border:1px solid #2A3158; border-radius:28px; padding:24px 28px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#E8A850; margin-bottom:10px;">Outdoor / Walking</p>
+        <p style="font-size:15px; line-height:25px; color:#C5CEDF; margin-bottom:18px;">Insulated coat, base layer, mid-layer fleece, wind-resistant shell if you have one. Gloves are not optional. Hat is mandatory. You've been warned.</p>
+        <div style="border-top:1px solid #2E3654; padding-top:18px;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#8B95B2; margin-bottom:10px;">Errand Mode</p>
+          <p style="font-size:15px; line-height:25px; color:#C5CEDF;">Warm insulated coat over one good layer. You'll be in and out of heat all day — a puffy you can unzip beats a parka you can't.</p>
+        </div>
+      </div>
+
+      <!-- Accessories -->
+      <div style="margin:0 20px 18px; background:#232A42; border:1px solid #2E3654; border-radius:28px; padding:24px 28px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#E8A850; margin-bottom:14px;">Grab Before You Go</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:baseline; gap:10px;">
+            <span style="color:#E8A850; font-weight:700; font-size:13px; flex-shrink:0;">Gloves</span>
+            <span style="font-size:14px; color:#9BA6BE; line-height:20px;">Not a suggestion. Feels like 22°F means business.</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:10px;">
+            <span style="color:#E8A850; font-weight:700; font-size:13px; flex-shrink:0;">Hat</span>
+            <span style="font-size:14px; color:#9BA6BE; line-height:20px;">Mandatory. Ears are not heat reservoirs.</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:10px;">
+            <span style="color:#E8A850; font-weight:700; font-size:13px; flex-shrink:0;">Sunglasses</span>
+            <span style="font-size:14px; color:#9BA6BE; line-height:20px;">Morning glare off existing snow. Squinting is not a look.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:16px 24px 28px; text-align:center;">
+        <p style="font-size:12px; color:#3E4866; line-height:20px;">Layer Up checks the weather so you can leave the house with less guesswork.</p>
+      </div>
+
+    </div>
+    <!-- END NIGHT DISPATCH -->
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <div class="analysis-label pros">Pros</div>
+      <ul class="analysis-list pros">
+        <li>Zero direct competition — no major weather email uses dark mode.</li>
+        <li>Opens dramatically differently in a crowded morning inbox.</li>
+        <li>Feels premium, intentional, and tech-forward — attracts younger demo.</li>
+        <li>Amber warmth counteracts the "cold" association of dark backgrounds.</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-label cons">Cons</div>
+      <ul class="analysis-list cons">
+        <li>Some email clients force light mode, stripping the entire identity.</li>
+        <li>Harder to skim — dark mode requires more deliberate reading.</li>
+        <li>Can feel less "morning" and more "2am doomscrolling".</li>
+        <li>Testing matrix across email clients is significantly wider.</li>
+      </ul>
+    </div>
+    <div class="analysis-card full-width">
+      <div class="analysis-label tradeoffs">Tradeoffs</div>
+      <ul class="analysis-list tradeoffs">
+        <li>Best play: offer as the subscriber's dark-mode preference option — not the default.</li>
+        <li>The amber accent is load-bearing. Swap it out and the warmth collapses.</li>
+        <li>If Layer Up eventually targets a tech-adjacent or design-aware audience, this is the boldest brand differentiator in the set.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END DESIGN 1 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DESIGN 2: THE BROADSHEET
+     Newspaper editorial. No rounded cards. Black rules. One rust accent.
+═══════════════════════════════════════════════════════════ -->
+<div class="design-col" id="design-2">
+  <div>
+    <div class="design-col-header">
+      <div>
+        <div class="design-num">Design 7 / New</div>
+        <div class="design-name">The Broadsheet</div>
+        <div class="design-summary">A newspaper editorial system. No rounded cards — sharp rules and typographic hierarchy do all the work. One rust accent against near-black and off-white. Feels like WSJ met Morning Brew for coffee.</div>
+      </div>
+      <div class="creativity-badge">Creativity: Very High</div>
+    </div>
+  </div>
+
+  <div class="email-frame">
+    <!-- THE BROADSHEET EMAIL -->
+    <div style="background:#F9F9F6; max-width:640px; margin:0 auto; font-family:Georgia,'Times New Roman',serif;">
+
+      <!-- Masthead -->
+      <div style="border-bottom:3px solid #111111; padding:16px 28px 14px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <span style="font-family:Georgia,serif; font-size:13px; font-weight:bold; letter-spacing:0.06em; text-transform:uppercase; color:#111111;">Layer Up</span>
+          <span style="font-size:11px; color:#777; letter-spacing:0.04em;">Chicago, IL · Tuesday, Mar. 11</span>
+        </div>
+      </div>
+
+      <!-- Headline block -->
+      <div style="padding:28px 28px 22px; border-bottom:1px solid #CFCFCF;">
+        <p style="font-size:11px; font-weight:bold; letter-spacing:0.20em; text-transform:uppercase; color:#A63D2F; margin-bottom:12px;">Daily Weather Brief</p>
+        <h1 style="font-family:Georgia,serif; font-size:42px; line-height:46px; font-weight:700; color:#111111; margin-bottom:14px; letter-spacing:-1px;">Layers up,<br>white sneakers down</h1>
+        <p style="font-size:16px; line-height:26px; color:#444444; margin-bottom:10px;">Winter is doing one last dramatic thing before it packs up and leaves. Respect it.</p>
+        <p style="font-size:12px; color:#999; letter-spacing:0.04em;">Good morning, Nick · 60618</p>
+      </div>
+
+      <!-- Rule section: Vibe -->
+      <div style="padding:20px 28px 18px; border-bottom:1px solid #CFCFCF;">
+        <p style="font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.24em; color:#A63D2F; margin-bottom:8px;">Vibe of the Day</p>
+        <p style="font-size:19px; line-height:28px; color:#111111; font-style:italic;">"Winter is doing one last dramatic thing before it packs up and leaves. Respect it."</p>
+      </div>
+
+      <!-- Two-column: Temp + Footwear -->
+      <div style="display:flex; border-bottom:1px solid #CFCFCF;">
+        <div style="flex:1; padding:20px 22px 20px 28px; border-right:1px solid #CFCFCF;">
+          <p style="font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.22em; color:#777; margin-bottom:8px;">Temperature</p>
+          <p style="font-size:28px; font-weight:700; color:#111111; margin-bottom:4px;">31°F</p>
+          <p style="font-size:12px; color:#A63D2F; font-weight:700; margin-bottom:8px;">Feels like 22°F</p>
+          <p style="font-size:14px; line-height:22px; color:#444;">The 9-degree gap is very much your problem today.</p>
+        </div>
+        <div style="flex:1; padding:20px 28px 20px 22px;">
+          <p style="font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.22em; color:#777; margin-bottom:8px;">Footwear</p>
+          <p style="font-size:14px; line-height:22px; color:#444; margin-top:4px;">Waterproof. Snow arrives around 3pm and that slush situation on sidewalks will be unforgiving to suede.</p>
+        </div>
+      </div>
+
+      <!-- Two-column: Layers -->
+      <div style="display:flex; border-bottom:1px solid #CFCFCF;">
+        <div style="flex:1; padding:20px 22px 20px 28px; border-right:1px solid #CFCFCF;">
+          <p style="font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.22em; color:#A63D2F; margin-bottom:8px;">Outdoor / Walking</p>
+          <p style="font-size:14px; line-height:22px; color:#333;">Insulated coat, base layer, mid-layer fleece, wind-resistant shell if you have one. Gloves are not optional. Hat is mandatory. You've been warned.</p>
+        </div>
+        <div style="flex:1; padding:20px 28px 20px 22px;">
+          <p style="font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.22em; color:#777; margin-bottom:8px;">Errand Mode</p>
+          <p style="font-size:14px; line-height:22px; color:#333;">Warm insulated coat over one good layer. You'll be in and out of heat all day — a puffy you can unzip beats a parka you can't.</p>
+        </div>
+      </div>
+
+      <!-- Accessories -->
+      <div style="padding:20px 28px; border-bottom:1px solid #CFCFCF;">
+        <p style="font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.22em; color:#A63D2F; margin-bottom:12px;">Grab Before You Go</p>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <p style="font-size:14px; line-height:22px; color:#333;"><strong>Gloves</strong> — Not a suggestion. Feels like 22°F means business.</p>
+          <p style="font-size:14px; line-height:22px; color:#333;"><strong>Hat</strong> — Mandatory. Ears are not heat reservoirs.</p>
+          <p style="font-size:14px; line-height:22px; color:#333;"><strong>Sunglasses</strong> — Morning glare off existing snow. Squinting is not a look.</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:16px 28px 24px;">
+        <p style="font-size:11px; color:#999; line-height:18px;">Layer Up checks the weather so you can leave the house with less guesswork. · <span style="color:#A63D2F;">Unsubscribe</span></p>
+      </div>
+
+    </div>
+    <!-- END BROADSHEET -->
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <div class="analysis-label pros">Pros</div>
+      <ul class="analysis-list pros">
+        <li>Radical layout departure — no cards, no radius, all typographic hierarchy.</li>
+        <li>The headline at 42px turns the subject line into a genuine editorial moment.</li>
+        <li>Two-column layout maximizes information density without feeling crowded.</li>
+        <li>Georgia + rust accent reads as reliable, not stuffy.</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-label cons">Cons</div>
+      <ul class="analysis-list cons">
+        <li>Least inline-image-friendly — no visual "relief" if content gets long.</li>
+        <li>Column layout can collapse badly on narrow screens or in email clients with quirky table rendering.</li>
+        <li>The newspaper aesthetic can skew older in brand perception.</li>
+      </ul>
+    </div>
+    <div class="analysis-card full-width">
+      <div class="analysis-label tradeoffs">Tradeoffs</div>
+      <ul class="analysis-list tradeoffs">
+        <li>The most different layout of any design in v1 or v2 — if Layer Up wants to own a lane, this claims "smart editorial" with the most conviction.</li>
+        <li>Works best when the copy is tight and opinionated — the format amplifies voice, good and bad.</li>
+        <li>Would benefit from a monogram or wordmark treatment in the masthead to lean harder into the brand identity.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END DESIGN 2 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DESIGN 3: THERMAL
+     Temperature-reactive hero. Giant numbers. Data-viz meets editorial.
+═══════════════════════════════════════════════════════════ -->
+<div class="design-col" id="design-3">
+  <div>
+    <div class="design-col-header">
+      <div>
+        <div class="design-num">Design 8 / New</div>
+        <div class="design-name">Thermal</div>
+        <div class="design-summary">The hero block takes on the actual temperature — cold days run deep blue, warm days amber. A giant temperature number leads every email, making data the hero instead of prose. Copy plays backup.</div>
+      </div>
+      <div class="creativity-badge">Creativity: High</div>
+    </div>
+  </div>
+
+  <div class="email-frame">
+    <!-- THERMAL EMAIL -->
+    <div style="background:#EBF0F6; max-width:640px; margin:0 auto; font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
+
+      <!-- Logo bar -->
+      <div style="padding:20px 24px 10px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:11px; font-weight:700; letter-spacing:0.20em; text-transform:uppercase; color:#2E5E8A;">Layer Up</span>
+        <span style="font-size:11px; color:#8AA0B8; letter-spacing:0.04em;">Chicago, IL · 60618</span>
+      </div>
+
+      <!-- Thermal hero — cold blue gradient for 31°F -->
+      <div style="margin:0 16px 18px; background:linear-gradient(145deg,#1B3A5E 0%,#1E4B7A 50%,#1A5580 100%); border-radius:28px; padding:32px 28px 28px; position:relative; overflow:hidden;">
+        <!-- Background texture element -->
+        <div style="position:absolute; top:-30px; right:-30px; width:200px; height:200px; background:rgba(255,255,255,0.04); border-radius:50%;"></div>
+        <p style="font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:14px;">Good morning, Nick</p>
+        <!-- Giant temperature -->
+        <div style="display:flex; align-items:flex-start; gap:0; margin-bottom:6px;">
+          <span style="font-size:96px; font-weight:800; color:#FFFFFF; line-height:1; letter-spacing:-4px;">31</span>
+          <span style="font-size:36px; font-weight:400; color:rgba(255,255,255,0.6); margin-top:14px;">°F</span>
+        </div>
+        <p style="font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:16px; font-weight:500; letter-spacing:0.04em;">FEELS LIKE <span style="color:#FFD080; font-weight:700;">22°F</span> WITH WIND</p>
+        <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:16px;">
+          <h2 style="font-size:22px; font-weight:600; color:#FFFFFF; line-height:28px; margin-bottom:8px;">Layers up, white sneakers down</h2>
+          <p style="font-size:14px; line-height:22px; color:rgba(255,255,255,0.7);">Winter is doing one last dramatic thing before it packs up and leaves. Respect it.</p>
+        </div>
+      </div>
+
+      <!-- Temp callout banner -->
+      <div style="margin:0 16px 14px; background:#FFF3E0; border:1px solid #FFD080; border-left:4px solid #F0A830; border-radius:16px; padding:14px 18px;">
+        <p style="font-size:12px; font-weight:700; color:#8B5E20; letter-spacing:0.08em;">FEELS-LIKE ALERT — 9° GAP</p>
+        <p style="font-size:13px; color:#6B4416; margin-top:4px; line-height:20px;">The gap between 31° and 22°F is the gap between your dignity and a miserable commute.</p>
+      </div>
+
+      <!-- Footwear -->
+      <div style="margin:0 16px 14px; background:#FFFFFF; border:1px solid #D4E0EE; border-radius:22px; padding:20px 22px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#2E6BA8; margin-bottom:8px;">Footwear</p>
+        <p style="font-size:15px; line-height:24px; color:#1E3055;">Waterproof. Snow arrives around 3pm and that slush situation on sidewalks will be unforgiving to suede.</p>
+      </div>
+
+      <!-- Layers split -->
+      <div style="display:flex; gap:12px; margin:0 16px 14px;">
+        <div style="flex:1; background:#FFFFFF; border:1px solid #D4E0EE; border-radius:22px; padding:18px 20px;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.20em; color:#2E6BA8; margin-bottom:8px;">Outdoor</p>
+          <p style="font-size:14px; line-height:22px; color:#1E3055;">Insulated coat, base layer, mid-layer fleece, wind-resistant shell. Gloves mandatory. Hat mandatory.</p>
+        </div>
+        <div style="flex:1; background:#EBF0F6; border:1px solid #C8D8E8; border-radius:22px; padding:18px 20px;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.20em; color:#5A8CAA; margin-bottom:8px;">Errands</p>
+          <p style="font-size:14px; line-height:22px; color:#2A4560;">Warm insulated coat over one good layer. A puffy you can unzip beats a parka you can't.</p>
+        </div>
+      </div>
+
+      <!-- Accessories -->
+      <div style="margin:0 16px 14px; background:#FFFFFF; border:1px solid #D4E0EE; border-radius:22px; padding:20px 22px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#2E6BA8; margin-bottom:14px;">Before You Leave</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:baseline; gap:0;">
+            <span style="font-size:13px; font-weight:700; color:#2E6BA8; min-width:100px;">Gloves</span>
+            <span style="font-size:13px; color:#5A7A98; line-height:20px;">Not a suggestion. Feels like 22°F means business.</span>
+          </div>
+          <div style="border-top:1px solid #D4E0EE; padding-top:8px; display:flex; align-items:baseline; gap:0;">
+            <span style="font-size:13px; font-weight:700; color:#2E6BA8; min-width:100px;">Hat</span>
+            <span style="font-size:13px; color:#5A7A98; line-height:20px;">Mandatory. Ears are not heat reservoirs.</span>
+          </div>
+          <div style="border-top:1px solid #D4E0EE; padding-top:8px; display:flex; align-items:baseline; gap:0;">
+            <span style="font-size:13px; font-weight:700; color:#2E6BA8; min-width:100px;">Sunglasses</span>
+            <span style="font-size:13px; color:#5A7A98; line-height:20px;">Morning glare off existing snow. Squinting is not a look.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:14px 24px 24px; text-align:center;">
+        <p style="font-size:11px; color:#7A9AB8; line-height:18px;">Layer Up checks the weather so you can leave the house with less guesswork.</p>
+      </div>
+
+    </div>
+    <!-- END THERMAL -->
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <div class="analysis-label pros">Pros</div>
+      <ul class="analysis-list pros">
+        <li>The giant temperature number in the hero is immediately scannable — you know the day in 0.5 seconds.</li>
+        <li>Temperature-reactive hero color creates genuine utility: cold = blue, warm = amber.</li>
+        <li>Feels-like alert banner is a design pattern that adds urgency intelligently.</li>
+        <li>Clean blue-white system is inbox-safe and renders well in all clients.</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-label cons">Cons</div>
+      <ul class="analysis-list cons">
+        <li>Cool blue palette may feel slightly clinical compared to Layer Up's warmer brand tone.</li>
+        <li>Hero gradient is heavy — Outlook may render it as a solid flat color.</li>
+        <li>The data-first hierarchy can compete with the brand voice and copy.</li>
+      </ul>
+    </div>
+    <div class="analysis-card full-width">
+      <div class="analysis-label tradeoffs">Tradeoffs</div>
+      <ul class="analysis-list tradeoffs">
+        <li>The killer feature is the reactive hero — if this can change color based on actual temperature, it becomes one of the most distinctive email experiences in the space.</li>
+        <li>Works best when the feels-like gap is notable. On "nice weather" days the alert banner would be suppressed — template needs graceful fallback logic.</li>
+        <li>Best paired with a data-confident copy tone. The wry humor needs to earn its place next to the big numbers.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END DESIGN 3 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DESIGN 4: STUDIO CLEAN
+     Ultra-minimal. Borders only, no fills. Fashion-editorial whitespace.
+═══════════════════════════════════════════════════════════ -->
+<div class="design-col" id="design-4">
+  <div>
+    <div class="design-col-header">
+      <div>
+        <div class="design-num">Design 9 / New</div>
+        <div class="design-name">Studio Clean</div>
+        <div class="design-summary">Pure white, no card fills — just thin borders, generous whitespace, and one terra cotta accent. Feels like a premium newsletter from a thoughtful design or fashion publication. Typography carries everything.</div>
+      </div>
+      <div class="creativity-badge">Creativity: Medium-High</div>
+    </div>
+  </div>
+
+  <div class="email-frame">
+    <!-- STUDIO CLEAN EMAIL -->
+    <div style="background:#FFFFFF; max-width:640px; margin:0 auto; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; border:1px solid #E8E3DB;">
+
+      <!-- Logo bar -->
+      <div style="padding:22px 28px 20px; border-bottom:1px solid #E8E3DB; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:20px; height:20px; background:#C9614E; border-radius:50%;"></div>
+          <span style="font-size:13px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#1A1A1A;">Layer Up</span>
+        </div>
+        <span style="font-size:11px; color:#AAAAAA; letter-spacing:0.04em;">Chicago · 60618</span>
+      </div>
+
+      <!-- Hero content — no card, just typography -->
+      <div style="padding:36px 28px 28px; border-bottom:1px solid #E8E3DB;">
+        <p style="font-size:12px; font-weight:600; color:#AAAAAA; letter-spacing:0.10em; text-transform:uppercase; margin-bottom:12px;">Good morning, Nick</p>
+        <h1 style="font-size:40px; line-height:44px; font-weight:700; color:#1A1A1A; letter-spacing:-1.5px; margin-bottom:16px;">Layers up,<br>white sneakers down</h1>
+        <p style="font-size:17px; line-height:28px; color:#555555; margin-bottom:0;">Winter is doing one last dramatic thing before it packs up and leaves. Respect it.</p>
+      </div>
+
+      <!-- Vibe -->
+      <div style="padding:24px 28px; border-bottom:1px solid #E8E3DB;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.24em; color:#C9614E; margin-bottom:10px;">Vibe of the Day</p>
+        <p style="font-size:20px; line-height:30px; color:#1A1A1A; font-style:italic; font-weight:400;">"Winter is doing one last dramatic thing before it packs up and leaves. Respect it."</p>
+      </div>
+
+      <!-- Temp + Footwear -->
+      <div style="display:flex; border-bottom:1px solid #E8E3DB;">
+        <div style="flex:1; padding:22px 22px 22px 28px; border-right:1px solid #E8E3DB;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#AAAAAA; margin-bottom:10px;">Temperature</p>
+          <p style="font-size:32px; font-weight:700; color:#1A1A1A; line-height:1; margin-bottom:4px;">31°F</p>
+          <p style="font-size:12px; color:#C9614E; font-weight:600; margin-bottom:10px;">feels like 22°F</p>
+          <p style="font-size:14px; line-height:22px; color:#555;">The 9-degree gap is very much your problem today.</p>
+        </div>
+        <div style="flex:1; padding:22px 28px 22px 22px;">
+          <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#AAAAAA; margin-bottom:10px;">Footwear</p>
+          <p style="font-size:14px; line-height:22px; color:#333; margin-top:4px;">Waterproof. Snow arrives around 3pm and that slush situation on sidewalks will be unforgiving to suede.</p>
+        </div>
+      </div>
+
+      <!-- Layers -->
+      <div style="padding:22px 28px; border-bottom:1px solid #E8E3DB;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#C9614E; margin-bottom:12px;">How to Layer Today</p>
+        <div style="display:flex; gap:24px;">
+          <div style="flex:1;">
+            <p style="font-size:11px; font-weight:600; color:#AAAAAA; text-transform:uppercase; letter-spacing:0.14em; margin-bottom:8px;">Outdoor</p>
+            <p style="font-size:14px; line-height:22px; color:#333;">Insulated coat, base layer, mid-layer fleece, wind-resistant shell. Gloves not optional. Hat mandatory.</p>
+          </div>
+          <div style="width:1px; background:#E8E3DB; flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <p style="font-size:11px; font-weight:600; color:#AAAAAA; text-transform:uppercase; letter-spacing:0.14em; margin-bottom:8px;">Errands</p>
+            <p style="font-size:14px; line-height:22px; color:#333;">Warm insulated coat over one good layer. A puffy you can unzip beats a parka you can't.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessories — inline style -->
+      <div style="padding:22px 28px; border-bottom:1px solid #E8E3DB;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#AAAAAA; margin-bottom:14px;">Before You Leave</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:baseline; gap:0;">
+            <span style="font-size:13px; font-weight:700; color:#C9614E; min-width:100px;">Gloves</span>
+            <span style="font-size:13px; color:#666; line-height:20px;">Not a suggestion. Feels like 22°F means business.</span>
+          </div>
+          <div style="border-top:1px solid #F0EDE8; padding-top:8px; display:flex; align-items:baseline; gap:0;">
+            <span style="font-size:13px; font-weight:700; color:#C9614E; min-width:100px;">Hat</span>
+            <span style="font-size:13px; color:#666; line-height:20px;">Mandatory. Ears are not heat reservoirs.</span>
+          </div>
+          <div style="border-top:1px solid #F0EDE8; padding-top:8px; display:flex; align-items:baseline; gap:0;">
+            <span style="font-size:13px; font-weight:700; color:#C9614E; min-width:100px;">Sunglasses</span>
+            <span style="font-size:13px; color:#666; line-height:20px;">Morning glare off existing snow. Squinting is not a look.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:18px 28px 22px;">
+        <p style="font-size:11px; color:#BBBBBB; line-height:18px;">Layer Up checks the weather so you can leave the house with less guesswork.</p>
+      </div>
+
+    </div>
+    <!-- END STUDIO CLEAN -->
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <div class="analysis-label pros">Pros</div>
+      <ul class="analysis-list pros">
+        <li>The most inbox-compatible design in v2 — white background, no gradients, no dark mode.</li>
+        <li>Whitespace does the heavy lifting, making even dense content feel airy and readable.</li>
+        <li>Terra cotta accent is warm and ownable — echoes the Layer Up brand palette without copying it.</li>
+        <li>Works beautifully in both desktop and mobile without media query tricks.</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-label cons">Cons</div>
+      <ul class="analysis-list cons">
+        <li>Minimal = easy to forget. Without strong copy, these emails may not feel distinctive.</li>
+        <li>No color differentiation between sections can make longer emails feel flat.</li>
+        <li>The single-accent approach breaks down if Layer Up needs to visually separate many content types.</li>
+      </ul>
+    </div>
+    <div class="analysis-card full-width">
+      <div class="analysis-label tradeoffs">Tradeoffs</div>
+      <ul class="analysis-list tradeoffs">
+        <li>Best candidate for a brand that wants to signal "we're thoughtful, not flashy" — deliberate restraint is its own statement.</li>
+        <li>Pairs exceptionally well with a dry, editorial copy tone. Less effective with Dad Joke Mode.</li>
+        <li>If Layer Up ever considers a paid tier or brand refresh, this is the template that ages best.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END DESIGN 4 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DESIGN 5: THE FORECAST REPORT
+     Numbered field-report aesthetic. Monospace labels. Structured utility.
+═══════════════════════════════════════════════════════════ -->
+<div class="design-col" id="design-5">
+  <div>
+    <div class="design-col-header">
+      <div>
+        <div class="design-num">Design 10 / New</div>
+        <div class="design-name">Forecast Report</div>
+        <div class="design-summary">Section numbers (01 / 02 / 03) replace eyebrow labels. Monospace type for metadata. A structured field-report personality that treats each email as a classified daily briefing. Warm khaki grounds it.</div>
+      </div>
+      <div class="creativity-badge">Creativity: High</div>
+    </div>
+  </div>
+
+  <div class="email-frame">
+    <!-- FORECAST REPORT EMAIL -->
+    <div style="background:#E6E0D1; max-width:640px; margin:0 auto; font-family:'Trebuchet MS',Arial,sans-serif;">
+
+      <!-- Masthead -->
+      <div style="background:#2B3220; padding:16px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <span style="font-family:'Courier New',Courier,monospace; font-size:13px; font-weight:700; letter-spacing:0.08em; color:#C8B98A; text-transform:uppercase;">LAYER UP</span>
+          <span style="font-family:'Courier New',Courier,monospace; font-size:11px; color:#6B7A58; margin-left:14px; letter-spacing:0.04em;">DAILY REPORT</span>
+        </div>
+        <span style="font-family:'Courier New',Courier,monospace; font-size:10px; color:#6B7A58; letter-spacing:0.04em;">TUE 2026-03-11</span>
+      </div>
+
+      <!-- Dispatch header -->
+      <div style="background:#D4CDBB; padding:20px 24px; border-bottom:2px solid #BFB89E;">
+        <p style="font-family:'Courier New',Courier,monospace; font-size:10px; letter-spacing:0.16em; color:#6B6251; text-transform:uppercase; margin-bottom:6px;">RECIPIENT: NICK — CHICAGO, IL 60618</p>
+        <h1 style="font-size:28px; line-height:34px; font-weight:700; color:#2B3220; letter-spacing:-0.5px;">Layers up, white sneakers down</h1>
+        <p style="font-size:14px; line-height:22px; color:#4A4337; margin-top:8px;">Winter is doing one last dramatic thing before it packs up and leaves. Respect it.</p>
+      </div>
+
+      <!-- Section 01: Vibe -->
+      <div style="margin:16px 16px 0; background:#EDE8D8; border:1px solid #C8BEAA; border-radius:4px 4px 0 0;">
+        <div style="padding:14px 20px; border-bottom:1px solid #C8BEAA; background:#D4CDBB; display:flex; align-items:center; gap:12px;">
+          <span style="font-family:'Courier New',Courier,monospace; font-size:18px; font-weight:700; color:#8B5A2B;">01</span>
+          <span style="font-family:'Courier New',Courier,monospace; font-size:10px; font-weight:700; letter-spacing:0.20em; text-transform:uppercase; color:#6B6251;">CONDITIONS SUMMARY</span>
+        </div>
+        <div style="padding:18px 20px;">
+          <p style="font-size:16px; line-height:26px; color:#2B3220;">"Winter is doing one last dramatic thing before it packs up and leaves. Respect it."</p>
+        </div>
+      </div>
+
+      <!-- Section 02: Temp + Footwear -->
+      <div style="margin:0 16px; background:#EDE8D8; border:1px solid #C8BEAA; border-top:none; display:flex;">
+        <div style="flex:1; border-right:1px solid #C8BEAA;">
+          <div style="padding:12px 18px; border-bottom:1px solid #C8BEAA; background:#D4CDBB; display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Courier New',Courier,monospace; font-size:16px; font-weight:700; color:#8B5A2B;">02</span>
+            <span style="font-family:'Courier New',Courier,monospace; font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#6B6251;">TEMPERATURE</span>
+          </div>
+          <div style="padding:16px 18px;">
+            <p style="font-size:30px; font-weight:700; color:#2B3220; line-height:1; margin-bottom:4px;">31°F</p>
+            <p style="font-family:'Courier New',Courier,monospace; font-size:11px; color:#8B5A2B; font-weight:700; letter-spacing:0.04em; margin-bottom:10px;">FEELS 22°F — DELTA: 9°F</p>
+            <p style="font-size:13px; line-height:21px; color:#4A4337;">The 9-degree gap is very much your problem today.</p>
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="padding:12px 18px; border-bottom:1px solid #C8BEAA; background:#D4CDBB; display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Courier New',Courier,monospace; font-size:16px; font-weight:700; color:#8B5A2B;">03</span>
+            <span style="font-family:'Courier New',Courier,monospace; font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#6B6251;">FOOTWEAR</span>
+          </div>
+          <div style="padding:16px 18px;">
+            <p style="font-size:13px; line-height:21px; color:#4A4337; margin-top:4px;">Waterproof. Snow arrives ~1500 HRS and that slush situation will be unforgiving to suede.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 04: Layers -->
+      <div style="margin:0 16px; background:#EDE8D8; border:1px solid #C8BEAA; border-top:none;">
+        <div style="padding:12px 18px; border-bottom:1px solid #C8BEAA; background:#D4CDBB; display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Courier New',Courier,monospace; font-size:16px; font-weight:700; color:#8B5A2B;">04</span>
+          <span style="font-family:'Courier New',Courier,monospace; font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#6B6251;">LAYERING PROTOCOL</span>
+        </div>
+        <div style="display:flex;">
+          <div style="flex:1; padding:16px 18px; border-right:1px solid #C8BEAA;">
+            <p style="font-family:'Courier New',Courier,monospace; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:#6B6251; margin-bottom:8px;">MODE A — OUTDOOR</p>
+            <p style="font-size:13px; line-height:21px; color:#2B3220;">Insulated coat, base layer, mid-layer fleece, wind-resistant shell. Gloves: mandatory. Hat: mandatory.</p>
+          </div>
+          <div style="flex:1; padding:16px 18px;">
+            <p style="font-family:'Courier New',Courier,monospace; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:#6B6251; margin-bottom:8px;">MODE B — ERRANDS</p>
+            <p style="font-size:13px; line-height:21px; color:#2B3220;">Warm insulated coat over one good layer. A puffy you can unzip beats a parka you can't.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 05: Accessories -->
+      <div style="margin:0 16px 16px; background:#EDE8D8; border:1px solid #C8BEAA; border-top:none; border-radius:0 0 4px 4px;">
+        <div style="padding:12px 18px; border-bottom:1px solid #C8BEAA; background:#D4CDBB; display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Courier New',Courier,monospace; font-size:16px; font-weight:700; color:#8B5A2B;">05</span>
+          <span style="font-family:'Courier New',Courier,monospace; font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#6B6251;">GEAR CHECKLIST</span>
+        </div>
+        <div style="padding:16px 18px;">
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:baseline; gap:8px; padding-bottom:8px; border-bottom:1px solid #C8BEAA;">
+              <span style="font-family:'Courier New',Courier,monospace; font-size:11px; color:#8B5A2B; font-weight:700; min-width:90px; flex-shrink:0;">[✓] GLOVES</span>
+              <span style="font-size:13px; color:#4A4337; line-height:20px;">Not a suggestion. 22°F means business.</span>
+            </div>
+            <div style="display:flex; align-items:baseline; gap:8px; padding-bottom:8px; border-bottom:1px solid #C8BEAA;">
+              <span style="font-family:'Courier New',Courier,monospace; font-size:11px; color:#8B5A2B; font-weight:700; min-width:90px; flex-shrink:0;">[✓] HAT</span>
+              <span style="font-size:13px; color:#4A4337; line-height:20px;">Mandatory. Ears are not heat reservoirs.</span>
+            </div>
+            <div style="display:flex; align-items:baseline; gap:8px;">
+              <span style="font-family:'Courier New',Courier,monospace; font-size:11px; color:#8B5A2B; font-weight:700; min-width:90px; flex-shrink:0;">[✓] SUNNIES</span>
+              <span style="font-size:13px; color:#4A4337; line-height:20px;">Morning glare off existing snow. Squinting is not a look.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:12px 20px 22px; display:flex; align-items:center; justify-content:space-between;">
+        <p style="font-family:'Courier New',Courier,monospace; font-size:10px; color:#8B7E6A; line-height:16px; letter-spacing:0.04em;">LAYER UP · END OF REPORT</p>
+        <p style="font-family:'Courier New',Courier,monospace; font-size:10px; color:#8B7E6A;">REF: 60618-TUE</p>
+      </div>
+
+    </div>
+    <!-- END FORECAST REPORT -->
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <div class="analysis-label pros">Pros</div>
+      <ul class="analysis-list pros">
+        <li>The numbered section system (01 / 02 / 03) is immediately distinct from every other design in v1 and v2.</li>
+        <li>Monospace metadata creates a "dispatched from HQ" feeling that reinforces the Layer Up voice.</li>
+        <li>Section structure is modular — easy to add or remove sections as feature set grows.</li>
+        <li>The sharp corners are a deliberate break from all the round-card emails — visually arresting.</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-label cons">Cons</div>
+      <ul class="analysis-list cons">
+        <li>The utility aesthetic can feel heavy or bureaucratic if copy doesn't balance it with warmth.</li>
+        <li>Sharp corners + monospace + dark header may read as "tech product" not "lifestyle newsletter".</li>
+        <li>Khaki palette has less contrast than some other options — accessibility needs checking.</li>
+      </ul>
+    </div>
+    <div class="analysis-card full-width">
+      <div class="analysis-label tradeoffs">Tradeoffs</div>
+      <ul class="analysis-list tradeoffs">
+        <li>The strongest candidate for a "signature format" — the numbered section system is ownable in a way that pure color systems aren't. Once readers learn the format, scanning becomes intuitive.</li>
+        <li>The "MODE A / MODE B" framing for layering is a copywriting upgrade over "Outdoor/Errand" — worth testing independent of visual design.</li>
+        <li>Pairs best with a dry-but-warm voice. Not the right container for Dad Joke Mode.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END DESIGN 5 -->
+
+
+</div><!-- /designs-grid -->
+</div><!-- /designs-scroll-wrap -->
+
+
+<!-- Bottom summary section -->
+<div style="max-width:900px; margin:0 40px 60px; padding:32px; background:rgba(255,253,248,0.85); border:1px solid rgba(29,36,48,0.09); border-radius:28px;">
+  <p style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#a14d3f; margin-bottom:12px;">Version 2 — Design Summary</p>
+  <h2 style="font-family:'Fraunces',Georgia,serif; font-size:24px; font-weight:600; color:#1d2430; margin-bottom:14px;">Five directions, five different bets.</h2>
+  <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-top:20px;">
+    <div>
+      <p style="font-size:11px; font-weight:700; color:#1d2430; margin-bottom:4px;">Night Dispatch</p>
+      <p style="font-size:12px; color:#5f7088; line-height:18px;">Bet on dark mode as the next frontier for email.</p>
+    </div>
+    <div>
+      <p style="font-size:11px; font-weight:700; color:#1d2430; margin-bottom:4px;">The Broadsheet</p>
+      <p style="font-size:12px; color:#5f7088; line-height:18px;">Bet on editorial typography over cards.</p>
+    </div>
+    <div>
+      <p style="font-size:11px; font-weight:700; color:#1d2430; margin-bottom:4px;">Thermal</p>
+      <p style="font-size:12px; color:#5f7088; line-height:18px;">Bet on making the data — not the copy — the visual hero.</p>
+    </div>
+    <div>
+      <p style="font-size:11px; font-weight:700; color:#1d2430; margin-bottom:4px;">Studio Clean</p>
+      <p style="font-size:12px; color:#5f7088; line-height:18px;">Bet on whitespace and restraint as a premium signal.</p>
+    </div>
+    <div>
+      <p style="font-size:11px; font-weight:700; color:#1d2430; margin-bottom:4px;">Forecast Report</p>
+      <p style="font-size:12px; color:#5f7088; line-height:18px;">Bet on a numbered system as an ownable format.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ebf0f6;
+  --foreground: #1e3055;
+  --surface: rgba(255, 255, 255, 0.84);
+  --surface-strong: rgba(255, 255, 255, 0.96);
+  --border: #d4e0ee;
+  --storm: #2e6ba8;
+  --sun: #ffd080;
+  --moss: #2a7a56;
+  --sand: #d8e4f0;
+  --rose: #bb6e62;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.76), transparent 30%),
+    radial-gradient(circle at top right, rgba(149, 177, 210, 0.22), transparent 34%),
+    linear-gradient(180deg, #f8fbff 0%, #ebf0f6 58%, #dde8f2 100%);
+  font-family: var(--font-manrope), sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), serif;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.grain {
+  position: relative;
+}
+
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+  background-size: 20px 20px, 24px 24px;
+  mix-blend-mode: soft-light;
+}

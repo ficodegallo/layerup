@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer Up — Thermal Email Design (Final)</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #D8E4F0;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────
+     THERMAL — Final approved design
+     Changes from v2 gallery:
+       1. Conditions card removed
+       2. Accessories use tabular "Before You Leave" layout
+───────────────────────────────────────────── -->
+<div style="background:#EBF0F6; width:640px; font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
+
+  <!-- Logo bar -->
+  <div style="padding:20px 24px 10px; display:flex; align-items:center; justify-content:space-between;">
+    <span style="font-size:11px; font-weight:700; letter-spacing:0.20em; text-transform:uppercase; color:#2E5E8A;">Layer Up</span>
+    <span style="font-size:11px; color:#8AA0B8; letter-spacing:0.04em;">Chicago, IL · 60618</span>
+  </div>
+
+  <!-- Thermal hero — cold blue gradient (≤32°F palette) -->
+  <div style="margin:0 16px 18px; background:linear-gradient(145deg,#1B3A5E 0%,#1E4B7A 50%,#1A5580 100%); border-radius:28px; padding:32px 28px 28px; position:relative; overflow:hidden;">
+    <div style="position:absolute; top:-30px; right:-30px; width:200px; height:200px; background:rgba(255,255,255,0.04); border-radius:50%;"></div>
+    <p style="font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:14px;">Good morning, Nick</p>
+    <!-- Giant temperature -->
+    <div style="display:flex; align-items:flex-start; margin-bottom:6px;">
+      <span style="font-size:96px; font-weight:800; color:#FFFFFF; line-height:1; letter-spacing:-4px;">31</span>
+      <span style="font-size:36px; font-weight:400; color:rgba(255,255,255,0.6); margin-top:14px;">°F</span>
+    </div>
+    <p style="font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:16px; font-weight:500; letter-spacing:0.04em;">FEELS LIKE <span style="color:#FFD080; font-weight:700;">22°F</span> WITH WIND</p>
+    <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:16px;">
+      <h2 style="font-size:22px; font-weight:600; color:#FFFFFF; line-height:28px; margin-bottom:8px;">Layers up, white sneakers down</h2>
+      <p style="font-size:14px; line-height:22px; color:rgba(255,255,255,0.7);">Winter is doing one last dramatic thing before it packs up and leaves. Respect it.</p>
+    </div>
+  </div>
+
+  <!-- Feels-like alert banner (shown when gap ≥ 8°F) -->
+  <div style="margin:0 16px 14px; background:#FFF3E0; border:1px solid #FFD080; border-left:4px solid #F0A830; border-radius:16px; padding:14px 18px;">
+    <p style="font-size:12px; font-weight:700; color:#8B5E20; letter-spacing:0.08em;">FEELS-LIKE ALERT — 9° GAP</p>
+    <p style="font-size:13px; color:#6B4416; margin-top:4px; line-height:20px;">The gap between 31° and 22°F is the gap between your dignity and a miserable commute.</p>
+  </div>
+
+  <!-- Footwear -->
+  <div style="margin:0 16px 14px; background:#FFFFFF; border:1px solid #D4E0EE; border-radius:22px; padding:20px 22px;">
+    <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#2E6BA8; margin-bottom:8px;">Footwear</p>
+    <p style="font-size:15px; line-height:24px; color:#1E3055;">Waterproof. Snow arrives around 3pm and that slush situation on sidewalks will be unforgiving to suede.</p>
+  </div>
+
+  <!-- Layers split -->
+  <div style="display:flex; gap:12px; margin:0 16px 14px;">
+    <div style="flex:1; background:#FFFFFF; border:1px solid #D4E0EE; border-radius:22px; padding:18px 20px;">
+      <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.20em; color:#2E6BA8; margin-bottom:8px;">Outdoor</p>
+      <p style="font-size:14px; line-height:22px; color:#1E3055;">Insulated coat, base layer, mid-layer fleece, wind-resistant shell. Gloves mandatory. Hat mandatory.</p>
+    </div>
+    <div style="flex:1; background:#EBF0F6; border:1px solid #C8D8E8; border-radius:22px; padding:18px 20px;">
+      <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.20em; color:#5A8CAA; margin-bottom:8px;">Errands</p>
+      <p style="font-size:14px; line-height:22px; color:#2A4560;">Warm insulated coat over one good layer. A puffy you can unzip beats a parka you can't.</p>
+    </div>
+  </div>
+
+  <!-- Before You Leave — tabular accessory rows -->
+  <div style="margin:0 16px 14px; background:#FFFFFF; border:1px solid #D4E0EE; border-radius:22px; padding:20px 22px;">
+    <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.22em; color:#2E6BA8; margin-bottom:14px;">Before You Leave</p>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; align-items:baseline; gap:0;">
+        <span style="font-size:13px; font-weight:700; color:#2E6BA8; min-width:100px;">Gloves</span>
+        <span style="font-size:13px; color:#5A7A98; line-height:20px;">Not a suggestion. Feels like 22°F means business.</span>
+      </div>
+      <div style="border-top:1px solid #D4E0EE; padding-top:8px; display:flex; align-items:baseline; gap:0;">
+        <span style="font-size:13px; font-weight:700; color:#2E6BA8; min-width:100px;">Hat</span>
+        <span style="font-size:13px; color:#5A7A98; line-height:20px;">Mandatory. Ears are not heat reservoirs.</span>
+      </div>
+      <div style="border-top:1px solid #D4E0EE; padding-top:8px; display:flex; align-items:baseline; gap:0;">
+        <span style="font-size:13px; font-weight:700; color:#2E6BA8; min-width:100px;">Sunglasses</span>
+        <span style="font-size:13px; color:#5A7A98; line-height:20px;">Morning glare off existing snow. Squinting is not a look.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="padding:14px 24px 28px; text-align:center;">
+    <p style="font-size:11px; color:#7A9AB8; line-height:18px;">Layer Up checks the weather so you can leave the house with less guesswork.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  UNSUBSCRIBED
+}
+
+enum HumorMode {
+  MILD_HUMOR
+  VERY_DRY
+  DAD_JOKE
+  STRAIGHT
+}
+
+enum LifestyleMode {
+  DRIVES
+  WALKS_TRANSIT
+}
+
+enum DeliveryHour {
+  SIX_AM
+  SEVEN_AM
+  EIGHT_AM
+}
+
+enum MeasurementSystem {
+  IMPERIAL
+  METRIC
+}
+
+enum BriefingStatus {
+  DRAFT
+  READY
+  SENT
+  FAILED
+  SKIPPED_SAFETY_MODE
+}
+
+enum JobKind {
+  FORECAST_REFRESH
+  DAILY_BRIEF_GENERATION
+  DAILY_SEND
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+model Subscriber {
+  id                   String              @id @default(cuid())
+  email                String              @unique
+  firstName            String?
+  zipCode              String
+  timeZone             String
+  latitude             Float?
+  longitude            Float?
+  status               SubscriberStatus    @default(ACTIVE)
+  humorMode            HumorMode           @default(MILD_HUMOR)
+  lifestyleMode        LifestyleMode       @default(DRIVES)
+  deliveryHour         DeliveryHour        @default(SEVEN_AM)
+  measurementSystem    MeasurementSystem   @default(IMPERIAL)
+  referralCode         String              @unique @default(cuid())
+  referredById         String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  referredBy           Subscriber?         @relation("SubscriberReferrals", fields: [referredById], references: [id])
+  referrals            Subscriber[]        @relation("SubscriberReferrals")
+  children             ChildProfile[]
+  dailyBriefings       DailyBriefing[]
+
+  @@index([zipCode, timeZone])
+  @@index([status])
+}
+
+model ChildProfile {
+  id                   String      @id @default(cuid())
+  subscriberId         String
+  sortOrder            Int
+  reportedAgeYears     Int
+  ageRecordedAt        DateTime
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  subscriber           Subscriber  @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriberId, sortOrder])
+  @@index([subscriberId])
+}
+
+model ForecastSnapshot {
+  id                   String      @id @default(cuid())
+  zipCode              String
+  timeZone             String
+  latitude             Float
+  longitude            Float
+  forecastDateLocal    DateTime
+  source               String
+  sourceRunAt          DateTime
+  normalizedForecast   Json
+  normalizedAlerts     Json?
+  createdAt            DateTime    @default(now())
+
+  dailyBriefings       DailyBriefing[]
+
+  @@unique([zipCode, forecastDateLocal])
+  @@index([forecastDateLocal])
+}
+
+model DailyBriefing {
+  id                   String          @id @default(cuid())
+  subscriberId         String
+  forecastSnapshotId   String?
+  localSendDate        DateTime
+  status               BriefingStatus  @default(DRAFT)
+  subjectLine          String
+  previewText          String?
+  weatherSummary       Json
+  renderedSections     Json
+  renderedHtml         String?
+  renderedText         String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  subscriber           Subscriber      @relation(fields: [subscriberId], references: [id])
+  forecastSnapshot     ForecastSnapshot? @relation(fields: [forecastSnapshotId], references: [id])
+
+  @@unique([subscriberId, localSendDate])
+  @@index([status, localSendDate])
+}
+
+model JobRun {
+  id                   String      @id @default(cuid())
+  kind                 JobKind
+  status               JobStatus   @default(PENDING)
+  startedAt            DateTime?
+  finishedAt           DateTime?
+  scope                Json?
+  detail               Json?
+  createdAt            DateTime    @default(now())
+
+  @@index([kind, status])
+}
