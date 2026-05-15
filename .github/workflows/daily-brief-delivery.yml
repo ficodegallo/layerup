@@ -1,0 +1,82 @@
+name: Daily Brief Delivery
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: Optional subscriber email to target
+        required: false
+        type: string
+      force:
+        description: Ignore local delivery-hour checks
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: Evaluate due subscribers without sending email
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-brief-delivery
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Validate scheduler secrets
+        env:
+          APP_URL: ${{ secrets.LAYER_UP_APP_URL }}
+          CRON_SECRET: ${{ secrets.LAYER_UP_CRON_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "Missing GitHub secret: LAYER_UP_APP_URL"
+            exit 1
+          fi
+
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Missing GitHub secret: LAYER_UP_CRON_SECRET"
+            exit 1
+          fi
+
+      - name: Trigger scheduled delivery
+        env:
+          APP_URL: ${{ secrets.LAYER_UP_APP_URL }}
+          CRON_SECRET: ${{ secrets.LAYER_UP_CRON_SECRET }}
+          INPUT_EMAIL: ${{ github.event.inputs.email || '' }}
+          INPUT_FORCE: ${{ github.event.inputs.force || 'false' }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          REQUEST_URL="$(node <<'EOF'
+          const appUrl = (process.env.APP_URL || "").replace(/\/$/, "");
+          const url = new URL(`${appUrl}/api/internal/cron/daily-briefs`);
+
+          if (process.env.INPUT_EMAIL) {
+            url.searchParams.set("email", process.env.INPUT_EMAIL);
+          }
+
+          if (process.env.INPUT_FORCE === "true") {
+            url.searchParams.set("force", "true");
+          }
+
+          if (process.env.INPUT_DRY_RUN === "true") {
+            url.searchParams.set("dryRun", "true");
+          }
+
+          process.stdout.write(url.toString());
+          EOF
+          )"
+
+          curl --fail-with-body --silent --show-error \
+            --retry 2 \
+            --retry-delay 5 \
+            --header "Authorization: Bearer ${CRON_SECRET}" \
+            "${REQUEST_URL}"
