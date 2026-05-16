@@ -78,9 +78,10 @@ http://localhost:3000
 Core:
 
 - `DATABASE_URL`: PostgreSQL connection string
-- `NEXT_PUBLIC_APP_URL`: local or deployed app URL
+- `NEXT_PUBLIC_APP_URL`: local or deployed app URL. `NEXT_PUBLIC_BASE_URL` is also accepted as a compatibility fallback.
 - `LAYER_UP_PREVIEW_ZIP`: ZIP used for the homepage preview
 - `NWS_API_USER_AGENT`: user agent sent to NWS requests
+- `SUBSCRIBER_MANAGEMENT_SECRET`: signing secret for unsubscribe and preferences links in subscriber emails. If unset, the app falls back to `CRON_SECRET`.
 
 Email sending:
 
@@ -112,6 +113,8 @@ These routes are intended for local use and return `404` in production where not
 - `POST /api/dev/run-daily-brief`: generate and persist a brief for a subscriber
 - `POST /api/dev/prepare-daily-brief-send`: prepare a saved send payload
 - `POST /api/dev/send-daily-brief`: send a saved briefing through SendGrid
+- `/manage-subscription`: secure subscriber preferences page reached from signed email links
+- `/unsubscribe`: secure unsubscribe confirmation page reached from signed email links
 - `/dev/email-preview`: render a saved briefing in-browser
 - `/dev/email-designs`: compare email design variants
 

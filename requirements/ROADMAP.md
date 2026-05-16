@@ -10,7 +10,7 @@
 - [ ] Replace the in-memory signup rate limiter with a shared store such as Upstash Redis.
   Why: The current limiter only protects a single server instance. A shared rate-limit store will work consistently across serverless instances and deployments.
 
-- [ ] Add signed subscriber management links for unsubscribe and preference updates.
+- [x] Add signed subscriber management links for unsubscribe and preference updates.
   Why: Email-based identity alone should not be enough to change subscriber settings. Signed links give subscribers a secure self-serve path without requiring passwords.
 
 ### Medium Priority

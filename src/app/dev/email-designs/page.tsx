@@ -10,6 +10,8 @@ import {
 } from "@/lib/email/email-design-library";
 import { renderDailyBriefEmail } from "@/lib/email/render-daily-brief-email";
 import { guardInternalPage } from "@/lib/security/internal-only";
+import type { SubscriberManagementLinks } from "@/lib/subscribers/management-links";
+import { buildSubscriberManagementLinks } from "@/lib/subscribers/management-links";
 import { getLiveWeatherSnapshot } from "@/lib/weather/get-live-weather-snapshot";
 import type { WeatherSnapshot } from "@/lib/weather/types";
 
@@ -30,9 +32,10 @@ type EmailDesignsPageProps = {
 
 type PreviewSource = {
   brief: DailyBrief;
-  weatherSnapshot: WeatherSnapshot;
+  managementLinks?: SubscriberManagementLinks;
   subscriberFirstName?: string | null;
   sourceLabel: string;
+  weatherSnapshot: WeatherSnapshot;
 };
 
 async function getPreviewSource(
@@ -62,6 +65,7 @@ async function getPreviewSource(
   if (savedBriefing) {
     return {
       brief: savedBriefing.renderedSections as unknown as DailyBrief,
+      managementLinks: buildSubscriberManagementLinks(savedBriefing.subscriber.id),
       weatherSnapshot: savedBriefing.weatherSummary as unknown as WeatherSnapshot,
       subscriberFirstName: savedBriefing.subscriber.firstName,
       sourceLabel: `Using the latest saved briefing for ${savedBriefing.subscriber.email}.`,
@@ -112,6 +116,7 @@ export default async function EmailDesignsPage({
     EMAIL_DESIGN_VARIANTS.map(async (meta) => {
       const rendered = await renderDailyBriefEmail({
         brief: preview.brief,
+        managementLinks: preview.managementLinks,
         subscriberFirstName: preview.subscriberFirstName,
         weatherSnapshot: preview.weatherSnapshot,
         variant: meta.id,

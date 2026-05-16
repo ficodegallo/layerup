@@ -1,7 +1,7 @@
-import { DeliveryHour } from "@prisma/client";
 import { resolveZipCode } from "@/lib/location/resolve-zip-code";
 import { sendSignupVerificationEmail } from "@/lib/email/send-signup-verification";
 import { createOrRefreshPendingSignup } from "@/lib/subscribers/pending-signup";
+import { mapDeliveryHourNumberToEnum } from "@/lib/subscribers/delivery-hour";
 import {
   getClientIp,
   getRequestOrigin,
@@ -14,18 +14,6 @@ import { betaSignupSchema } from "@/lib/validation/subscriber";
 const maxSignupBodyBytes = 8_192;
 const genericSuccessMessage =
   "Check your email for a secure confirmation link to finish joining the beta.";
-
-function mapDeliveryHour(hour: 6 | 7 | 8) {
-  if (hour === 6) {
-    return DeliveryHour.SIX_AM;
-  }
-
-  if (hour === 8) {
-    return DeliveryHour.EIGHT_AM;
-  }
-
-  return DeliveryHour.SEVEN_AM;
-}
 
 export async function POST(request: Request) {
   if (!isSameOriginRequest(request)) {
@@ -153,7 +141,9 @@ export async function POST(request: Request) {
       timeZone: location.timeZone,
       latitude: location.latitude,
       longitude: location.longitude,
-      deliveryHour: mapDeliveryHour(parsed.data.preferredDeliveryHour),
+      deliveryHour: mapDeliveryHourNumberToEnum(
+        parsed.data.preferredDeliveryHour,
+      ),
       children: parsed.data.children,
     });
 

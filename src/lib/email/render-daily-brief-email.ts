@@ -5,10 +5,12 @@ import {
   buildDailyBriefEmailMjml,
   type EmailDesignVariant,
 } from "@/lib/email/email-design-library";
+import type { SubscriberManagementLinks } from "@/lib/subscribers/management-links";
 import type { WeatherSnapshot } from "@/lib/weather/types";
 
 type RenderDailyBriefEmailInput = {
   brief: DailyBrief;
+  managementLinks?: SubscriberManagementLinks;
   subscriberFirstName?: string | null;
   weatherSnapshot: WeatherSnapshot;
   variant?: EmailDesignVariant;
@@ -24,6 +26,7 @@ function renderPlainText(
   brief: DailyBrief,
   weatherSnapshot: WeatherSnapshot,
   subscriberFirstName?: string | null,
+  managementLinks?: SubscriberManagementLinks,
 ) {
   const greeting = subscriberFirstName
     ? `Hi ${subscriberFirstName},`
@@ -72,17 +75,20 @@ ${brief.footwear.summary}
 Before You Leave
 ${accessoryLines}
 ${safetyBlock}
+${managementLinks ? `Manage preferences: ${managementLinks.manageUrl}\nUnsubscribe: ${managementLinks.unsubscribeUrl}\n` : ""}
 Layer Up`;
 }
 
 export async function renderDailyBriefEmail({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
   variant,
 }: RenderDailyBriefEmailInput): Promise<RenderedEmail> {
   const mjml = buildDailyBriefEmailMjml({
     brief,
+    managementLinks,
     subscriberFirstName,
     weatherSnapshot,
     variant,
@@ -104,7 +110,12 @@ export async function renderDailyBriefEmail({
 
   return {
     html: result.html,
-    text: renderPlainText(brief, weatherSnapshot, subscriberFirstName),
+    text: renderPlainText(
+      brief,
+      weatherSnapshot,
+      subscriberFirstName,
+      managementLinks,
+    ),
     previewText: brief.previewText,
   };
 }

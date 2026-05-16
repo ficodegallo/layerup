@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPrismaClient } from "@/lib/db";
 import { renderDailyBriefEmail } from "@/lib/email/render-daily-brief-email";
 import { guardInternalPage } from "@/lib/security/internal-only";
+import { buildSubscriberManagementLinks } from "@/lib/subscribers/management-links";
 import type { DailyBrief } from "@/lib/briefing/types";
 import type { WeatherSnapshot } from "@/lib/weather/types";
 
@@ -54,6 +55,7 @@ export default async function EmailPreviewPage({
 
   const rendered = await renderDailyBriefEmail({
     brief: briefing.renderedSections as unknown as DailyBrief,
+    managementLinks: buildSubscriberManagementLinks(briefing.subscriber.id),
     subscriberFirstName: briefing.subscriber.firstName,
     weatherSnapshot: briefing.weatherSummary as unknown as WeatherSnapshot,
   });

@@ -1,3 +1,8 @@
+import {
+  HumorMode,
+  LifestyleMode,
+  MeasurementSystem,
+} from "@prisma/client";
 import { z } from "zod";
 
 export const childSignupSchema = z.object({
@@ -22,4 +27,17 @@ export const betaSignupSchema = z.object({
   website: z.string().trim().max(200).optional().default(""),
 });
 
+export const subscriberPreferencesSchema = z.object({
+  token: z.string().trim().min(1, "Missing management token."),
+  zipCode: z.string().regex(/^\d{5}$/, "ZIP code must be 5 digits."),
+  firstName: z.string().trim().max(50).optional().or(z.literal("")),
+  preferredDeliveryHour: z.union([z.literal(6), z.literal(7), z.literal(8)]),
+  humorMode: z.nativeEnum(HumorMode),
+  lifestyleMode: z.nativeEnum(LifestyleMode),
+  measurementSystem: z.nativeEnum(MeasurementSystem),
+});
+
 export type BetaSignupInput = z.infer<typeof betaSignupSchema>;
+export type SubscriberPreferencesInput = z.infer<
+  typeof subscriberPreferencesSchema
+>;

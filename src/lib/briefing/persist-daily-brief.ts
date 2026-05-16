@@ -10,6 +10,7 @@ import { getPrismaClient } from "@/lib/db";
 import { renderDailyBriefEmail } from "@/lib/email/render-daily-brief-email";
 import { getEffectiveChildAgeYears } from "@/lib/family/child-outfit-recommendations";
 import { resolveZipCode } from "@/lib/location/resolve-zip-code";
+import { buildSubscriberManagementLinks } from "@/lib/subscribers/management-links";
 import { getLiveWeatherSnapshot } from "@/lib/weather/get-live-weather-snapshot";
 
 function toDateOnlyUtc(dateString: string) {
@@ -90,6 +91,7 @@ export async function persistDailyBriefForSubscriber(
     });
     const renderedEmail = await renderDailyBriefEmail({
       brief,
+      managementLinks: buildSubscriberManagementLinks(subscriber.id),
       subscriberFirstName: subscriber.firstName,
       weatherSnapshot,
     });

@@ -7,6 +7,7 @@ import {
   getThermalGradient,
   getThermalTheme,
 } from "@/lib/design/thermal-theme";
+import type { SubscriberManagementLinks } from "@/lib/subscribers/management-links";
 import type { WeatherSnapshot } from "@/lib/weather/types";
 
 export type EmailDesignVariant =
@@ -29,6 +30,7 @@ export type EmailDesignVariantMeta = {
 
 type EmailTemplateContext = {
   brief: DailyBrief;
+  managementLinks?: SubscriberManagementLinks;
   subscriberFirstName?: string | null;
   weatherSnapshot: WeatherSnapshot;
 };
@@ -184,6 +186,57 @@ function getLocationLine(weatherSnapshot: WeatherSnapshot) {
   return `${escapeHtml(weatherSnapshot.locationName)} (${escapeHtml(
     weatherSnapshot.zipCode,
   )})`;
+}
+
+function buildEmailFooter(options: {
+  linkColor: string;
+  managementLinks?: SubscriberManagementLinks;
+  padding?: string;
+  tagline: string;
+  textColor: string;
+  textSize?: number;
+}) {
+  const managementLinksBlock = options.managementLinks
+    ? `
+      <mj-text
+        font-size="12px"
+        line-height="20px"
+        color="${options.textColor}"
+        align="center"
+        padding="8px 0 0"
+      >
+        <a
+          href="${escapeHtml(options.managementLinks.manageUrl)}"
+          style="color:${options.linkColor}; text-decoration:underline;"
+        >
+          Manage preferences
+        </a>
+        &nbsp;•&nbsp;
+        <a
+          href="${escapeHtml(options.managementLinks.unsubscribeUrl)}"
+          style="color:${options.linkColor}; text-decoration:underline;"
+        >
+          Unsubscribe
+        </a>
+      </mj-text>
+    `
+    : "";
+
+  return `
+    <mj-section padding="${options.padding ?? "0 16px 32px"}">
+      <mj-column>
+        <mj-text
+          font-size="${options.textSize ?? 11}px"
+          line-height="18px"
+          color="${options.textColor}"
+          align="center"
+        >
+          ${escapeHtml(options.tagline)}
+        </mj-text>
+        ${managementLinksBlock}
+      </mj-column>
+    </mj-section>
+  `;
 }
 
 function buildAccessoryParagraphs(
@@ -524,6 +577,7 @@ function wrapEmailDocument(options: {
 
 function renderThermalTemplate({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
 }: EmailTemplateContext) {
@@ -694,19 +748,20 @@ function renderThermalTemplate({
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0 16px 32px">
-        <mj-column>
-          <mj-text font-size="11px" line-height="18px" color="#7A9AB8" align="center">
-            Layer Up checks the weather so you can leave the house with less guesswork.
-          </mj-text>
-        </mj-column>
-      </mj-section>
+      ${buildEmailFooter({
+        tagline:
+          "Layer Up checks the weather so you can leave the house with less guesswork.",
+        textColor: "#7A9AB8",
+        linkColor: "#2E5E8A",
+        managementLinks,
+      })}
     `,
   });
 }
 
 function renderClassicTemplate({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
 }: EmailTemplateContext) {
@@ -817,19 +872,22 @@ function renderClassicTemplate({
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0 20px 36px">
-        <mj-column>
-          <mj-text font-size="13px" line-height="20px" color="#6D7782" align="center">
-            Layer Up checks the weather so you can leave the house with less guesswork.
-          </mj-text>
-        </mj-column>
-      </mj-section>
+      ${buildEmailFooter({
+        tagline:
+          "Layer Up checks the weather so you can leave the house with less guesswork.",
+        textColor: "#6D7782",
+        linkColor: "#7E4A3C",
+        managementLinks,
+        padding: "0 20px 36px",
+        textSize: 13,
+      })}
     `,
   });
 }
 
 function renderSunriseTemplate({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
 }: EmailTemplateContext) {
@@ -941,19 +999,21 @@ function renderSunriseTemplate({
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0 20px 36px">
-        <mj-column>
-          <mj-text font-size="13px" line-height="20px" color="#836555" align="center">
-            A brighter take on the daily Layer Up brief.
-          </mj-text>
-        </mj-column>
-      </mj-section>
+      ${buildEmailFooter({
+        tagline: "A brighter take on the daily Layer Up brief.",
+        textColor: "#836555",
+        linkColor: "#A96A4C",
+        managementLinks,
+        padding: "0 20px 36px",
+        textSize: 13,
+      })}
     `,
   });
 }
 
 function renderFieldGuideTemplate({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
 }: EmailTemplateContext) {
@@ -1065,19 +1125,21 @@ function renderFieldGuideTemplate({
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0 20px 36px">
-        <mj-column>
-          <mj-text font-size="13px" line-height="20px" color="#61725A" align="center">
-            Built for people who want the weather translated into decisions.
-          </mj-text>
-        </mj-column>
-      </mj-section>
+      ${buildEmailFooter({
+        tagline: "Built for people who want the weather translated into decisions.",
+        textColor: "#61725A",
+        linkColor: "#4B6142",
+        managementLinks,
+        padding: "0 20px 36px",
+        textSize: 13,
+      })}
     `,
   });
 }
 
 function renderCityPosterTemplate({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
 }: EmailTemplateContext) {
@@ -1189,19 +1251,21 @@ function renderCityPosterTemplate({
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0 20px 36px">
-        <mj-column>
-          <mj-text font-size="13px" line-height="20px" color="#5C5E67" align="center">
-            Stronger contrast, bigger attitude, same weather logic underneath.
-          </mj-text>
-        </mj-column>
-      </mj-section>
+      ${buildEmailFooter({
+        tagline: "Stronger contrast, bigger attitude, same weather logic underneath.",
+        textColor: "#5C5E67",
+        linkColor: "#B14E3E",
+        managementLinks,
+        padding: "0 20px 36px",
+        textSize: 13,
+      })}
     `,
   });
 }
 
 function renderWeekendPopTemplate({
   brief,
+  managementLinks,
   subscriberFirstName,
   weatherSnapshot,
 }: EmailTemplateContext) {
@@ -1313,13 +1377,15 @@ function renderWeekendPopTemplate({
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0 20px 36px">
-        <mj-column>
-          <mj-text font-size="13px" line-height="20px" color="#586B84" align="center">
-            Most playful of the five. Best when the brand wants a little more swagger.
-          </mj-text>
-        </mj-column>
-      </mj-section>
+      ${buildEmailFooter({
+        tagline:
+          "Most playful of the five. Best when the brand wants a little more swagger.",
+        textColor: "#586B84",
+        linkColor: "#4764A7",
+        managementLinks,
+        padding: "0 20px 36px",
+        textSize: 13,
+      })}
     `,
   });
 }
